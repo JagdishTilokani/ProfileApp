@@ -1,0 +1,12 @@
+/* @import "~bootstrap/dist/css/bootstrap.css"; */
+
+:root {
+    --color-primary: black;
+    --color-secondary: white;
+    --primary-bg: teal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}

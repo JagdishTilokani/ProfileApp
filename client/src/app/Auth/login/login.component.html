@@ -1,0 +1,11 @@
+<div class="form-container">
+    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <input type="email" placeholder="Email" class="form-input" formControlName="email">
+        <p *ngIf="email!.touched && email!.invalid" class="error"> Please enter Email</p>
+
+        <input type="password" placeholder="Password" class="form-input" formControlName="password">
+        <p *ngIf="password!.touched && password!.invalid" class="error"> Please enter Password</p>
+        
+        <button type="submit" [disabled]="!loginForm.valid" class="btn">Login</button>
+    </form>
+</div>

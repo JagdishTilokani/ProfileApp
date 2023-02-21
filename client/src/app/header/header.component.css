@@ -1,0 +1,35 @@
+.header {
+    display: flex;
+    align-items: center;
+    gap: 3em;
+    padding: 1.2em;
+    background-color: var(--primary-bg);
+    position: sticky;
+}
+
+.header a {
+    text-decoration: none;
+    color: unset;
+}
+
+.logo {
+    color: black;
+    font-size: 1.5rem;
+}
+
+.navbar {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+}
+
+.nav-items {
+    display: flex;
+    gap: 0.8em;
+    list-style: none;
+}
+
+.nav-item {
+    padding: 2px;
+}
+

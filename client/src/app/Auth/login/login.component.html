@@ -1,11 +1,37 @@
 <div class="form-container">
+    <div class="heading">Login</div>
     <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onLogin()">
-        <input type="email" placeholder="Email" class="form-input" formControlName="email">
-        <p *ngIf="email!.touched && email!.invalid" class="error"> Please enter Email</p>
+        <div class="input-container">
+            <input type="email" placeholder="Email" class="form-input" formControlName="email">
+            <p *ngIf="email!.touched && email!.invalid" class="error"> Please enter a valid Email</p>
+        </div>
 
-        <input type="password" placeholder="Password" class="form-input" formControlName="password">
-        <p *ngIf="password!.touched && password!.invalid" class="error"> Please enter Password</p>
-        
+        <div class="input-container">
+            <div class="password-container">
+                <input [type]="passwordVisible ? 'text' : 'password'" placeholder="Password" class="form-input"
+                    formControlName="password">
+                <i class="far visibility" [class]="passwordVisible ? 'fa-eye-slash' : 'fa-eye'"
+                    (click)="togglePasswordVisibility()"></i>
+            </div>
+            <p *ngIf="password!.touched && password!.invalid" class="error"> Please enter Password</p>
+        </div>
+
+        <div class="remember-me">
+            <input type="checkbox" id="remember-me" formControlName="rememberMe">
+            <label for="remember-me">Remember me</label>
+        </div>
+
         <button type="submit" [disabled]="!loginForm.valid" class="btn">Login</button>
+
+        <div class="other-options">
+            <p class="forgot">
+                Forgot <a href="#">Password</a> ?
+            </p>
+
+            <p class="register">
+                Don't have an account ? <a routerLink="/register">Register</a>
+            </p>
+        </div>
+
     </form>
 </div>

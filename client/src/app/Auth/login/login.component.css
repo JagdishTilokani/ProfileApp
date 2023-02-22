@@ -1,15 +1,37 @@
+:host {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .form-container {
     padding: 2em;
+    box-shadow: 5px 5px 25px grey;
+    box-sizing: border-box;
+    width: 450px;
+    max-width: 90%;
+    margin: 2em 0;
+}
+
+.heading {
+    text-align: center;
+    font-size: 2rem;
+    color: teal;
 }
 
 .login-form {
     display: flex;
-    box-shadow: 5px 5px 25px grey;
     display: flex;
     flex-direction: column;
-    width: 50%;
     padding: 2em;
     gap: 1em;
+}
+
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .form-input {
@@ -17,16 +39,49 @@
     outline: none;
     border: none;
     box-shadow: 2px 2px 5px rgb(128, 128, 128, 0.5) ;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.error {
+    margin-top: 0.3em;
+    color: red;
+}
+
+.visibility {
+    position: absolute;
+    right: 0.5em;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.remember-me {
+    display: flex;
+    gap: 0.5em;
 }
 
 .btn {
+    align-self: center;
     background-color: teal;
     width: fit-content;
     padding: 1em 2em;
     border: none;
     border-radius: 8px;
+    cursor: pointer;
+    color: white;
 }
 
 .btn:disabled {
     background-color: rgb(163, 161, 161);
+    cursor: auto;
+}
+
+.other-options {
+    align-self: center;
+    text-align: center;
+}
+
+.forgot a, .register a{
+    color: teal;
+    text-decoration: none;
 }

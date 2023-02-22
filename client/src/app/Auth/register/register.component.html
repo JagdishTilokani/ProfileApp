@@ -1,1 +1,37 @@
-<p>register works!</p>
+<div class="form-container">
+    <div class="heading">Register</div>
+    <form class="register-form" [formGroup]="registerForm" (ngSubmit)="onRegister()">
+        <div class="input-container">
+            <input type="email" placeholder="Email" class="form-input" formControlName="email">
+            <p *ngIf="email!.touched && email!.invalid" class="error"> Please enter a valid Email</p>
+        </div>
+
+        <div class="input-container">
+            <div class="password-container">
+                <input [type]="passwordVisible ? 'text' : 'password'" placeholder="Password" class="form-input"
+                    formControlName="password">
+                <i class="far visibility" [class]="passwordVisible ? 'fa-eye-slash' : 'fa-eye'"
+                    (click)="togglePasswordVisibility()"></i>
+            </div>
+            <p *ngIf="password!.touched && password!.invalid" class="error"> Please enter Password</p>
+        </div>
+
+        <!-- <div class="remember-me">
+            <input type="checkbox" id="remember-me" formControlName="rememberMe">
+            <label for="remember-me">Remember me</label>
+        </div> -->
+
+        <button type="submit" [disabled]="!registerForm.valid" class="btn">Register</button>
+
+        <div class="other-options">
+            <!-- <p class="forgot">
+                Forgot <a href="#">Password</a> ?
+            </p> -->
+
+            <p class="register">
+                Already have an account ? <a routerLink="/login">Login</a>
+            </p>
+        </div>
+
+    </form>
+</div>

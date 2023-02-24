@@ -10,9 +10,13 @@ export class RegisterComponent {
   passwordVisible = false;
 
   registerForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', Validators.required),
-    rememberMe: new FormControl(false)
+    name: new FormControl('', Validators.required),
+    email: new FormControl('', Validators.required),
+    height: new FormControl(),
+    DOB: new FormControl(),
+    gender: new FormControl(),
+    password: new FormControl('', [Validators.required]),
+    cpassword: new FormControl('', Validators.required),
   });
 
   get email() {
@@ -23,8 +27,8 @@ export class RegisterComponent {
     return this.registerForm.get('password');
   }
 
-  get rememberUser() {
-    return this.registerForm.get('rememberMe')!.value;
+  get cpassword() {
+    return this.registerForm.get('cpassword');
   }
 
   togglePasswordVisibility() {
@@ -33,7 +37,6 @@ export class RegisterComponent {
 
   onRegister() {
     console.log(this.registerForm);
-    console.log(this.rememberUser);
     
     this.registerForm.setErrors({
       invalidLogin: true

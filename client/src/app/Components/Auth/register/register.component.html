@@ -1,0 +1,69 @@
+<div class="form-container">
+    <div class="heading">Register</div>
+    <form class="register-form" [formGroup]="registerForm" (ngSubmit)="onRegister()">
+
+        <p>Fields marked with <span class="required">*</span> are required.</p>
+
+        <div class="input-container">
+            <span>Name: <span class="required">*</span></span>
+            <input type="text" placeholder="Name" class="form-input" formControlName="name">
+        </div>
+
+        <div class="input-container">
+            <span>Email: <span class="required">*</span></span>
+            <input type="email" placeholder="Email" class="form-input" formControlName="email">
+            <div class="errors">
+                <p *ngIf="email!.touched && email!.invalid" class="error"> Please enter a valid Email</p>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <span>Height (in centimeter):</span>
+            <input type="number" placeholder="Height (in cm)" class="form-input" formControlName="height">
+        </div>
+
+        <div class="input-container">
+            <span>Date of birth:</span>
+            <input type="date" class="form-input">
+        </div>
+
+        <div class="input-container">
+            <span>Gender: </span>
+            <div class="gender-options form-input">
+                <label>
+                    <input type="radio" id="gender" value="Female" formControlName="gender">
+                    <span>Female</span>
+                </label>
+                <label>
+                    <input type="radio" id="gender" value="Male" formControlName="gender">
+                    <span>Male</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <span>Password: <span class="required">*</span></span>
+            <input type="password" placeholder="Set a new Password" class="form-input" formControlName="password">
+            <p *ngIf="password!.touched && password!.invalid" class="error"> Please enter Password</p>
+        </div>
+
+        <div class="input-container">
+            <span>Confirm Password: <span class="required">*</span></span>
+            <div class="password-container">
+                <input [type]="passwordVisible ? 'text' : 'password'" placeholder="Confirm Password" class="form-input"
+                    formControlName="cpassword">
+                <i class="far visibility" [class]="passwordVisible ? 'fa-eye-slash' : 'fa-eye'"
+                    (click)="togglePasswordVisibility()"></i>
+            </div>
+        </div>
+        
+        <button type="submit" [disabled]="registerForm.invalid" class="btn">Register</button>
+
+        <div class="other-options">
+            <p class="login">
+                Already have an account ? <a routerLink="/login">Login</a>
+            </p>
+        </div>
+
+    </form>
+</div>

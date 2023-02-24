@@ -1,15 +1,17 @@
+import { AuthService } from './../../../Services/auth.service';
 import { Component } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { ToastrService } from 'ngx-toastr';
+import { CognitoUser } from "@aws-amplify/auth";
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent { 
+export class LoginComponent {
 
-  constructor(private toastr: ToastrService) {
+  constructor(private toastr: ToastrService, private auth: AuthService) {
 
   }
 
@@ -29,22 +31,24 @@ export class LoginComponent {
     return this.loginForm.get('password');
   }
 
-  get rememberUser() {
-    return this.loginForm.get('rememberMe')!.value;
-  }
-
   togglePasswordVisibility() {
     this.passwordVisible = !this.passwordVisible;
   }
 
   onLogin() {
-    console.log(this.loginForm);
-    console.log(this.rememberUser);
     
-    this.loginForm.setErrors({
-      invalidLogin: true
-    });
-
-    this.toastr.error("Invalid email or password");
+    this.auth.login(this.email!.value!, this.password!.value!)
+      .then((res: CognitoUser) => {
+        console.log(res);
+        res.completeNewPasswordChallenge("Sujal@123", {  }, {
+          onSuccess: (session) => {
+            console.log(session);
+          },
+          onFailure: (err) => {
+            console.log(err);
+          }
+        });
+      })
+      .catch(console.log);
   }
 }

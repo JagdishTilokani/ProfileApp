@@ -24,7 +24,7 @@
     display: flex;
     display: flex;
     flex-direction: column;
-    padding: 2em;
+    padding: 1em;
     gap: 1em;
 }
 
@@ -50,8 +50,8 @@
 
 .visibility {
     position: absolute;
-    right: 0.5em;
-    font-size: 1.5rem;
+    right: 1em;
+    font-size: 1rem;
     cursor: pointer;
 }
 
@@ -76,7 +76,22 @@
     text-align: center;
 }
 
-.forgot a, .register a{
+.login a{
     color: teal;
     text-decoration: none;
+}
+
+.required {
+    color: red;
+}
+
+.gender {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.gender-options {
+    display: flex;
+    gap: 1em;
 }

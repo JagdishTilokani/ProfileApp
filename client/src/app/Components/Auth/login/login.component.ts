@@ -3,6 +3,7 @@ import { Component } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { ToastrService } from 'ngx-toastr';
 import { CognitoUser } from "@aws-amplify/auth";
+import { Auth } from 'aws-amplify';
 
 @Component({
   selector: 'app-login',
@@ -36,18 +37,17 @@ export class LoginComponent {
   }
 
   onLogin() {
-    
     this.auth.login(this.email!.value!, this.password!.value!)
       .then((res: CognitoUser) => {
         console.log(res);
-        res.completeNewPasswordChallenge("Sujal@123", {  }, {
-          onSuccess: (session) => {
-            console.log(session);
-          },
-          onFailure: (err) => {
-            console.log(err);
-          }
-        });
+        // res.authenticateUser();
+
+        Auth.currentAuthenticatedUser()
+          .then(res => {
+            console.log("hello", res);
+            
+          });
+          
       })
       .catch(console.log);
   }

@@ -1,3 +1,4 @@
+import { AuthService } from './../../../Services/auth.service';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -7,6 +8,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
+  constructor(private auth: AuthService) {
+
+  }
+
   passwordVisible = false;
 
   registerForm = new FormGroup({
@@ -18,6 +23,10 @@ export class RegisterComponent {
     password: new FormControl('', [Validators.required]),
     cpassword: new FormControl('', Validators.required),
   });
+
+  get name() {
+    return this.registerForm.get('name')
+  }
 
   get email() {
     return this.registerForm.get('email');
@@ -31,6 +40,18 @@ export class RegisterComponent {
     return this.registerForm.get('cpassword');
   }
 
+  get DOB() {
+    return this.registerForm.get('DOB');
+  }
+
+  get gender() {
+    return this.registerForm.get('gender');
+  }
+
+  get height() {
+    return this.registerForm.get('height');
+  }
+
   togglePasswordVisibility() {
     this.passwordVisible = !this.passwordVisible;
   }
@@ -38,8 +59,13 @@ export class RegisterComponent {
   onRegister() {
     console.log(this.registerForm);
     
-    this.registerForm.setErrors({
-      invalidLogin: true
-    })
+    // this.registerForm.setErrors({
+    //   invalidLogin: true
+    // })
+
+    this.auth.register(this.email!.value!, this.password?.value!, this.name!.value!, this.DOB?.value, this.height!.value, this.gender!.value)
+      .then(console.log)
+      .catch(console.error);
+    
   }
 }

@@ -26,7 +26,8 @@
               "camelcase-keys",
               "js-cookie",
               "cookie",
-              "isomorphic-unfetch"
+              "isomorphic-unfetch",
+              "aws-sdk/clients/dynamodb"
             ],
             "outputPath": "dist/client",
             "index": "src/index.html",

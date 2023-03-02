@@ -4,6 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { ToastrService } from 'ngx-toastr';
 import { CognitoUser } from "@aws-amplify/auth";
 import { Auth } from 'aws-amplify';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +13,7 @@ import { Auth } from 'aws-amplify';
 })
 export class LoginComponent {
 
-  constructor(private toastr: ToastrService, private auth: AuthService) {
+  constructor(private toastr: ToastrService, private auth: AuthService, private router: Router) {
 
   }
 
@@ -38,17 +39,13 @@ export class LoginComponent {
 
   onLogin() {
     this.auth.login(this.email!.value!, this.password!.value!)
-      .then((res: CognitoUser) => {
-        console.log(res);
-        // res.authenticateUser();
-
-        Auth.currentAuthenticatedUser()
-          .then(res => {
-            console.log("hello", res);
-            
-          });
-          
+      .then(res => {
+          this.toastr.success("Logged in successfully");
+          this.auth.setLoginStatus();          
+          this.router.navigate(["/"]);
       })
-      .catch(console.log);
+      .catch(err => {
+        this.toastr.error("Invalid email or password");
+      });
   }
 }

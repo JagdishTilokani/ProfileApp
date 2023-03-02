@@ -13,6 +13,8 @@ import { HeaderComponent } from './Components/header/header.component';
 import { FooterComponent } from './Components/footer/footer.component';
 import { UsersComponent } from './Components/users/users.component';
 import { UserComponent } from './Components/user/user.component';
+import { ConfirmSignupComponent } from './Components/Auth/confirm-signup/confirm-signup.component';
+import { HomeComponent } from './Components/home/home.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,8 @@ import { UserComponent } from './Components/user/user.component';
     RegisterComponent,
     UsersComponent,
     UserComponent,
+    ConfirmSignupComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,

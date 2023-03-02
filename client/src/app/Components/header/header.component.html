@@ -3,20 +3,35 @@
     <nav class="navbar">
         <ul class="nav-items">
             <li class="nav-item">
-                <a href="#" class="home">Home</a>
+                <a href="#" class="home nav-link">Home</a>
             </li>
             <li class="nav-item">
-                <a href="#">About Us</a>
+                <a href="#" class="nav-link">About Us</a>
             </li>
             
         </ul>
 
-        <ul class="nav-items account">
+        <ul class="nav-items account" *ngIf="!isLoggedIn">
             <li class="nav-item">
-                <a routerLink="/login">Login</a>
+                <a routerLink="/login" class="nav-link">Login</a>
             </li>
             <li class="nav-item">
-                <a href="/register">Register </a>
+                <a href="/register" class="nav-link">Register </a>
+            </li>
+        </ul>
+
+        <ul class="nav-items account" *ngIf="isLoggedIn">
+            <li class="nav-item" *ngIf="isAdmin">
+                <a routerLink="/users" class="nav-link">All Users </a>
+            </li>
+            <li class="nav-item" *ngIf="!isAdmin">
+                <a routerLink="{{ '/users/' + userId }}" class="nav-link">
+                    <i class="fa fa-user"></i>
+                    My Profile 
+                </a>
+            </li>
+            <li class="nav-item">
+                <span (click)="onLogOut()" class="nav-link">Logout</span>
             </li>
         </ul>
     </nav>

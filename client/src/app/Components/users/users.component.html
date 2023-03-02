@@ -1,1 +1,16 @@
-{{ users | json }}
+<div class="users">
+    <table border="1" >
+        <thead>
+            <tr>
+                <td>Name</td>
+                <td>Email</td>
+            </tr>
+        </thead>
+        <tbody *ngIf="users">
+            <tr *ngFor="let user of users" (click)="viewProfile(user['id'].S!)" routerLink="{{ '/users/' + user['id'].S! }}">
+                <td>{{ user['name'].S}}</td>
+                <td>{{ user['email'].S }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

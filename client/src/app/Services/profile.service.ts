@@ -1,3 +1,4 @@
+import { AuthService, IUserData } from 'src/app/Services/auth.service';
 import { CognitoUser } from '@aws-amplify/auth';
 import { Auth } from 'aws-amplify';
 import { Injectable } from '@angular/core';
@@ -5,32 +6,37 @@ import DynamoDB, { GetItemOutput, ScanOutput } from 'aws-sdk/clients/dynamodb';
 import { AWSError } from 'aws-sdk';
 import { default as _config } from "../../config.json";
 
+interface IProfile extends IUserData {
+  id: string,
+  isConfirmed: boolean,
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileService {
 
-  constructor() { }
+  constructor(private auth: AuthService) { }
 
-  getAllUserProfiles(callback: (err: AWSError, data: ScanOutput) => void) {
+  getAllUserProfiles(callback: (err: any, data: ScanOutput) => void) {
     const params = {
       TableName: 'Users'
     }
 
-    Auth.currentCredentials()
-      .then(credentials => {
-        // console.log("credentials: ", credentials);
-    
+    this.auth.getCredentials((err, credentials) => {
+      if (err) {
+        callback(err, {})
+      }
+
+      else {
         const db = new DynamoDB({
           region: _config.region,
-          credentials: Auth.essentialCredentials(credentials)
+          credentials: credentials
         });
 
         db.scan(params, callback);
-      })
-      .catch(err => {
-        // console.error("promise error", err);
-      });
+      }
+    })
   }
 
   getProfile(id: string, callback: (err: AWSError, data: GetItemOutput) => void) {
@@ -43,20 +49,31 @@ export class ProfileService {
       }
     };
 
-    Auth.currentCredentials()
-      .then(credentials => {
-        // console.log("credentials: ", credentials);
-    
-        const db = new DynamoDB({
-          region: _config.region,
-          credentials: Auth.essentialCredentials(credentials)
-        });
+    // Auth.currentCredentials()
+    //   .then(credentials => {
+    //     // console.log("credentials: ", credentials);
 
-        db.getItem(params, callback);
-      })
-      .catch(err => {
-        // console.error("promise error", err);
-      });
+    //     const db = new DynamoDB({
+    //       region: _config.region,
+    //       credentials: Auth.essentialCredentials(credentials)
+    //     });
+
+    //     db.getItem(params, callback);
+    //   })
+    //   .catch(err => {
+    //     // console.error("promise error", err);
+    //   });
+  }
+
+  addProfile(profile: IProfile) {
+    const url = `${_config.api.invokeUrl}/users`
+    return fetch(url, {
+      method: "POST",
+      body: JSON.stringify(profile),
+      headers: {
+        "content-Type": "application/json"
+      }
+    });
   }
 }
 

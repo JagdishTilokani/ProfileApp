@@ -1,0 +1,54 @@
+:host {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-container {
+    padding: 2em;
+    box-shadow: 5px 5px 25px grey;
+    box-sizing: border-box;
+    width: 450px;
+    max-width: 90%;
+    margin: 2em 0;
+}
+
+.heading {
+    text-align: center;
+    font-size: 1.1rem;
+    /* color: teal; */
+}
+
+.confirmation-form {
+    display: flex;
+    display: flex;
+    flex-direction: column;
+    padding: 2em;
+    gap: 1em;
+}
+
+.form-input {
+    padding: 1em;
+    outline: none;
+    border: none;
+    box-shadow: 2px 2px 5px rgb(128, 128, 128, 0.5) ;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.btn {
+    align-self: center;
+    background-color: teal;
+    width: fit-content;
+    padding: 1em 2em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+}
+
+.btn:disabled {
+    background-color: rgb(163, 161, 161);
+    cursor: auto;
+}

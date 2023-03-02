@@ -1,0 +1,14 @@
+:host {
+    flex-grow: 1;
+    display: flex;
+}
+
+.heading {
+    font-size: 2rem;
+    text-align: center;
+    margin: 2em;
+}
+
+.img {
+    width: 100%;
+}

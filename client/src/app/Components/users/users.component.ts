@@ -1,6 +1,7 @@
 import { ProfileService } from './../../Services/profile.service';
 import { Component, OnInit } from '@angular/core';
 import { default as _config } from "../../../config.json";
+import { ItemList } from 'aws-sdk/clients/dynamodb';
 
 @Component({
   selector: 'app-users',
@@ -8,7 +9,7 @@ import { default as _config } from "../../../config.json";
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-  users: any;
+  users: ItemList | null = null;
 
   constructor(private profileService: ProfileService) { }
 
@@ -28,12 +29,16 @@ export class UsersComponent implements OnInit {
 
     this.profileService.getAllUserProfiles((err, data) => {
       if (err) {
-        console.error("callbakc error", err);
+        console.error("Error getting all users", err);
       }
 
       else {
-        console.log(data);
+        this.users = data.Items!;
       }
     })
+  }
+
+  viewProfile(id: string) {
+    
   }
 }

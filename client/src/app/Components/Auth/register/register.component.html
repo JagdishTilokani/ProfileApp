@@ -1,4 +1,4 @@
-<div class="form-container">
+<div class="form-container" *ngIf="!formSubmitted">
     <div class="heading">Register</div>
     <form class="register-form" [formGroup]="registerForm" (ngSubmit)="onRegister()">
 
@@ -65,5 +65,15 @@
             </p>
         </div>
 
+    </form>
+</div>
+
+<div class="form-container" *ngIf="formSubmitted">
+    <div class="heading">Enter code sent to your email to verify your email id</div>
+    <form class="register-form" [formGroup]="confirmationForm" (ngSubmit)="verifyCode()">
+        <div class="input-container">
+            <input type="password" placeholder="XXXXXX" class="form-input" formControlName="code">
+        </div>
+        <button type="submit" [disabled]="confirmationForm.invalid" class="btn">Submit</button>
     </form>
 </div>

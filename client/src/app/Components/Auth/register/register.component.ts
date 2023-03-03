@@ -1,7 +1,11 @@
+// import { InvalidLambdaResponseException } from '@aws-sdk/client-cognito-identity/';
+import { ToastrService } from 'ngx-toastr';
 import { ProfileService } from './../../../Services/profile.service';
 import { AuthService } from './../../../Services/auth.service';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+// import { InvalidLambdaResponseException } from "@aws-sdk/"
 
 @Component({
   selector: 'app-register',
@@ -9,9 +13,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  constructor(private auth: AuthService, private profileService: ProfileService) {
-
-  }
+  constructor(private auth: AuthService,
+    private profileService: ProfileService,
+    private toastr: ToastrService,
+    private router: Router) { }
 
   passwordVisible = false;
   formSubmitted = false;
@@ -27,8 +32,9 @@ export class RegisterComponent {
     name: new FormControl('', Validators.required),
     email: new FormControl('', Validators.required),
     height: new FormControl(),
-    DOB: new FormControl(),
+    birthdate: new FormControl(),
     gender: new FormControl(),
+    profileImage: new FormControl(),
     password: new FormControl('', [Validators.required]),
     cpassword: new FormControl('', Validators.required),
   });
@@ -49,8 +55,8 @@ export class RegisterComponent {
     return this.registerForm.get('cpassword');
   }
 
-  get DOB() {
-    return this.registerForm.get('DOB');
+  get birthdate() {
+    return this.registerForm.get('birthdate');
   }
 
   get gender() {
@@ -65,40 +71,34 @@ export class RegisterComponent {
     this.passwordVisible = !this.passwordVisible;
   }
 
+  selectedImage: File | null = null;
+
+  onImageSelect(inputImage: any) {
+    this.selectedImage = inputImage.files[0];
+  }
+
   onRegister() {
-    // this.auth.register(userData, this.password!.value!, (err, data) => {
-    //   if (err) {
-
-    //   }
-
-    //   else {
+    // this.auth.register(this.email!.value!, this.password!.value!)
+    //   .then(res => {
     //     this.formSubmitted = true;
-    //   }
-    // });
+    //   })
+    //   .catch(console.error);
 
-    this.auth.register(this.email!.value!, this.password!.value!)
-      .then(res => {
+    const reader = new FileReader();
 
-        const profile = {
-          id: res.userSub,
-          name: this.name!.value!,
-          email: this.email!.value!,
-          height: this.height!.value,
-          birthdate: this.height!.value,
-          gender: this.gender!.value,
-          isConfirmed: false,
-        }
+    reader.addEventListener('load', event => {
+      console.log(JSON.stringify(event, null, 4));
+      this.profileService.addProfileImage('abc', this.selectedImage!)
+    });
 
-        this.profileService.addProfile(profile)
-          .then(res => {
-            console.log("profile added: ", res);
-            this.formSubmitted = true;
-          })
-          .catch(err => {
-            console.error("Error adding profile ", err);
-          })
-      })
-      .catch(console.error);
+    reader.readAsDataURL(this.selectedImage!);
+
+    console.log(
+      this.registerForm.get('profileImage')!.value
+    );
+
+    // this.profileService.addProfileImage(abc, )
+
   }
 
   // Email confirmation
@@ -113,16 +113,37 @@ export class RegisterComponent {
   verifyCode() {
     const metadata = {
       name: this.name!.value,
-      birthdate: this.DOB!.value,
-      height: String(this.height!.value),
-      gender: this.gender!.value
+      birthdate: this.birthdate!.value || null,
+      height: String(this.height!.value) || null,
+      gender: this.gender!.value || null
     }
 
     console.log(metadata);
 
     this.auth.verifyCode(this.email!.value!, this.code!.value!, metadata)
-      // this.auth.verifyCode("jagdishtilokani835@gmail.com", this.code!.value!, this.dummy)
-      .then(console.log)
-      .catch(console.error);
+      .then(res => {
+        this.auth.login(this.email!.value!, this.password!.value!)
+          .then(res => {
+            this.toastr.success("Email verified successfully.");
+            this.router.navigate(["/"]);
+          })
+          .catch(err => {
+            throw err
+          });
+      })
+      .catch(err => {
+        if (err instanceof Error) {
+          this.toastr.error(err.message);
+        }
+
+        else {
+          this.toastr.error("Please try again", "Something went wrong");
+        }
+
+        this.confirmationForm.setErrors({
+          'Confirmation Error': true
+        })
+        console.error(err);
+      });
   }
 }

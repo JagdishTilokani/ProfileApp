@@ -40,12 +40,20 @@ export class LoginComponent {
   onLogin() {
     this.auth.login(this.email!.value!, this.password!.value!)
       .then(res => {
-          this.toastr.success("Logged in successfully");
-          this.auth.setLoginStatus();          
-          this.router.navigate(["/"]);
+        this.toastr.success("Logged in successfully");
+        this.auth.setLoginStatus();
+        this.router.navigate(["/"]);
       })
       .catch(err => {
-        this.toastr.error("Invalid email or password");
+        if (err instanceof Error) {
+          this.toastr.error(err.message);
+        }
+
+        else {
+          this.toastr.error("Please try again", "Something went wrong");
+        }
+        
+        console.error(err);
       });
   }
 }

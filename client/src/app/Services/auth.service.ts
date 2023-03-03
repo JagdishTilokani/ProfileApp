@@ -15,10 +15,10 @@ interface ILoginInfo {
 
 export interface IUserData {
   name: string,
-  email: string,
-  height?: number | null,
-  birthdate?: string | null,
-  gender?: string | null
+  // email: string,
+  // height?: number | null,
+  // birthdate?: string | null,
+  // gender?: string | null
 }
 
 @Injectable({

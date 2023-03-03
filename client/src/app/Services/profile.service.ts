@@ -1,9 +1,9 @@
 import { AuthService, IUserData } from 'src/app/Services/auth.service';
 import { CognitoUser } from '@aws-amplify/auth';
-import { Auth } from 'aws-amplify';
+import { Auth, Storage } from 'aws-amplify';
 import { Injectable } from '@angular/core';
 import DynamoDB, { GetItemOutput, ScanOutput } from 'aws-sdk/clients/dynamodb';
-import { AWSError } from 'aws-sdk';
+import { AWSError, S3 } from 'aws-sdk';
 import { default as _config } from "../../config.json";
 
 interface IProfile extends IUserData {
@@ -74,6 +74,38 @@ export class ProfileService {
         "content-Type": "application/json"
       }
     });
+  }
+
+  addProfileImage(userId: string, imageFile: File) {
+    this.auth.getCredentials((err, creds) => {
+      if (!err) {
+        Storage.configure({
+          region: _config.region,
+          // userPoolId: _config.cognito.USER_POOL_ID,
+          // userPoolWebClientId: _config.cognito.APP_CLIENT_ID,
+          identityPoolId: _config.cognito.IDENTITY_POOL_ID,
+          credentials: creds
+        });
+
+        console.log("requesting");
+        
+        Storage.put("bcd", imageFile, {
+          bucket: _config.s3.imagesBucket,
+          // ...creds
+        })
+          .then(res => {
+            console.log("hiii", res);
+          })
+          .catch(err => {
+            console.log("Error: ", err);
+            
+          });
+      }
+    });
+
+
+
+
   }
 }
 

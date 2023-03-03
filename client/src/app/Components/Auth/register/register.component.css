@@ -20,6 +20,10 @@
     color: teal;
 }
 
+.confirm-code-heading {
+    font-size: 1.3rem;
+}
+
 .register-form {
     display: flex;
     display: flex;

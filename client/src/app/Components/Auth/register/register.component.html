@@ -24,7 +24,7 @@
 
         <div class="input-container">
             <span>Date of birth:</span>
-            <input type="date" class="form-input">
+            <input type="date" class="form-input" formControlName="birthdate">
         </div>
 
         <div class="input-container">
@@ -42,6 +42,12 @@
         </div>
 
         <div class="input-container">
+            <span>Profile Image: </span>
+            <input type="file" class="form-input" formControlName="profileImage"
+                accept="image/png, image/jpeg, image/jpg" #profileImage (change)="onImageSelect(profileImage)">
+        </div>
+
+        <div class="input-container">
             <span>Password: <span class="required">*</span></span>
             <input type="password" placeholder="Set a new Password" class="form-input" formControlName="password">
             <p *ngIf="password!.touched && password!.invalid" class="error"> Please enter Password</p>
@@ -56,7 +62,7 @@
                     (click)="togglePasswordVisibility()"></i>
             </div>
         </div>
-        
+
         <button type="submit" [disabled]="registerForm.invalid" class="btn">Register</button>
 
         <div class="other-options">
@@ -69,7 +75,7 @@
 </div>
 
 <div class="form-container" *ngIf="formSubmitted">
-    <div class="heading">Enter code sent to your email to verify your email id</div>
+    <div class="heading confirm-code-heading">Enter code sent to your email to verify your email id</div>
     <form class="register-form" [formGroup]="confirmationForm" (ngSubmit)="verifyCode()">
         <div class="input-container">
             <input type="password" placeholder="XXXXXX" class="form-input" formControlName="code">

@@ -7,5 +7,8 @@
         "USER_POOL_ID": "ap-northeast-1_WyENbKSrm",
         "APP_CLIENT_ID": "3lkpiliuij9aarlbcg59de1orl",
         "IDENTITY_POOL_ID": "ap-northeast-1:a13c5948-58ae-4764-b217-4bacb705f0a4"
+    },
+    "s3": {
+        "imagesBucket": "profile-app-images"
     }
 }

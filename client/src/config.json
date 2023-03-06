@@ -10,5 +10,8 @@
     },
     "s3": {
         "imagesBucket": "profile-app-images"
+    },
+    "dynamodb": {
+        "profilesTable": "Users"
     }
 }

@@ -1,111 +1,178 @@
 import { AuthService, IUserData } from 'src/app/Services/auth.service';
-import { CognitoUser } from '@aws-amplify/auth';
-import { Auth, Storage } from 'aws-amplify';
 import { Injectable } from '@angular/core';
 import DynamoDB, { GetItemOutput, ScanOutput } from 'aws-sdk/clients/dynamodb';
-import { AWSError, S3 } from 'aws-sdk';
+import { S3 } from 'aws-sdk';
+import { PutObjectOutput } from 'aws-sdk/clients/s3';
 import { default as _config } from "../../config.json";
 
 interface IProfile extends IUserData {
-  id: string,
-  isConfirmed: boolean,
+    id: string,
+    isConfirmed: boolean,
 }
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class ProfileService {
 
-  constructor(private auth: AuthService) { }
+    constructor(private auth: AuthService) { }
 
-  getAllUserProfiles(callback: (err: any, data: ScanOutput) => void) {
-    const params = {
-      TableName: 'Users'
+    async getAllUserProfiles() {
+        const params = {
+            TableName: _config.dynamodb.profilesTable
+        }
+
+        const creds = await this.auth.getCredentials();
+        const db = new DynamoDB({
+            region: _config.region,
+            credentials: creds
+        });
+
+        return db.scan(params).promise();
     }
 
-    this.auth.getCredentials((err, credentials) => {
-      if (err) {
-        callback(err, {})
-      }
+    // getAllUserProfiles(callback: (err: any, data: ScanOutput) => void) {
+    //     const params = {
+    //         TableName: 'Users'
+    //     }
 
-      else {
+    //     this.auth.getCredentials((err, credentials) => {
+    //         if (err) {
+    //             callback(err, {})
+    //         }
+
+    //         else {
+    //             const db = new DynamoDB({
+    //                 region: _config.region,
+    //                 credentials: credentials
+    //             });
+
+    //             db.scan(params, callback);
+    //         }
+    //     })
+    // }
+
+    async getProfile(id: string) {
+        const params = {
+            TableName: _config.dynamodb.profilesTable,
+            Key: {
+                id: {
+                    S: id
+                }
+            }
+        };
+
+        const creds = await this.auth.getCredentials();
         const db = new DynamoDB({
-          region: _config.region,
-          credentials: credentials
+            region: _config.region,
+            credentials: creds
         });
 
-        db.scan(params, callback);
-      }
-    })
-  }
+        return db.getItem(params).promise();
+    }
 
-  getProfile(id: string, callback: (err: AWSError, data: GetItemOutput) => void) {
-    const params = {
-      TableName: 'Users',
-      Key: {
-        id: {
-          S: id
-        }
-      }
-    };
+    // getProfile(id: string, callback: (err: any, data: GetItemOutput) => void) {
+    //     const params = {
+    //         TableName: 'Users',
+    //         Key: {
+    //             id: {
+    //                 S: id
+    //             }
+    //         }
+    //     };
 
-    // Auth.currentCredentials()
-    //   .then(credentials => {
-    //     // console.log("credentials: ", credentials);
+    //     this.auth.getCredentials((err, credentials) => {
 
-    //     const db = new DynamoDB({
-    //       region: _config.region,
-    //       credentials: Auth.essentialCredentials(credentials)
+    //         if (err) {
+    //             callback(err, {})
+    //         }
+
+    //         else {
+    //             const db = new DynamoDB({
+    //                 region: _config.region,
+    //                 credentials: credentials
+    //             });
+
+    //             db.getItem(params, callback);
+    //         }
+    //     })
+    // }
+
+    // Add profile using API Gateway Call
+
+    // addProfile(profile: IProfile) {
+    //     const url = `${_config.api.invokeUrl}/users`
+    //     return fetch(url, {
+    //         method: "POST",
+    //         body: JSON.stringify(profile),
+    //         headers: {
+    //             "content-Type": "application/json"
+    //         }
     //     });
+    // }
 
-    //     db.getItem(params, callback);
-    //   })
-    //   .catch(err => {
-    //     // console.error("promise error", err);
-    //   });
-  }
-
-  addProfile(profile: IProfile) {
-    const url = `${_config.api.invokeUrl}/users`
-    return fetch(url, {
-      method: "POST",
-      body: JSON.stringify(profile),
-      headers: {
-        "content-Type": "application/json"
-      }
-    });
-  }
-
-  addProfileImage(userId: string, imageFile: File) {
-    this.auth.getCredentials((err, creds) => {
-      if (!err) {
-        Storage.configure({
-          region: _config.region,
-          // userPoolId: _config.cognito.USER_POOL_ID,
-          // userPoolWebClientId: _config.cognito.APP_CLIENT_ID,
-          identityPoolId: _config.cognito.IDENTITY_POOL_ID,
-          credentials: creds
+    async getProfileImage(userId: string) {
+        const creds = await this.auth.getCredentials();
+        const s3 = new S3({
+            region: _config.region,
+            credentials: creds
         });
 
-        console.log("requesting");
-        
-        Storage.put("bcd", imageFile, {
-          bucket: _config.s3.imagesBucket,
-          // ...creds
-        })
-          .then(res => {
-            console.log("hiii", res);
-          })
-          .catch(err => {
-            console.log("Error: ", err);
-            
-          });
-      }
-    });
+        const params = {
+            Bucket: _config.s3.imagesBucket,
+            Key: userId + ".jpeg",
+            Expires: 60,
+            // ResponseContentType: "application/octet-stream"
+            // ResponseContentType: "multipart/form-data"
+        };
 
+        // return s3.getObject(params).promise();
+        return s3.getSignedUrlPromise('getObject', params)
+        // return s3.upload(params).promise();
+    }
 
+    async addProfileImage(userId: string, imageFile: File) {
+        const creds = await this.auth.getCredentials();
+        const s3 = new S3({
+            region: _config.region,
+            credentials: creds
+        });
 
+        const params = {
+            Bucket: _config.s3.imagesBucket,
+            Key: userId + ".jpeg",
+            Body: imageFile,
+            ContentType: "multipart/form-data",
+        };
 
-  }
+        return s3.putObject(params).promise();
+        // return s3.upload(params).promise();
+    }
+
+    // addProfileImage(userId: string, imageFile: File, callback: (err: any, data: PutObjectOutput) => void) {
+    //     this.auth.getCredentials((err, creds) => {
+    //         if (err) {
+    //             callback(err, {});
+    //         }
+
+    //         else {
+    //             const s3 = new S3({
+    //                 region: _config.region,
+    //                 credentials: creds
+    //             });
+
+    //             const params = {
+    //                 Bucket: _config.s3.imagesBucket,
+    //                 Key: userId,
+    //                 Body: imageFile,
+    //                 ContentType: "multipart/form-data",
+    //             };
+
+    //             s3.putObject(params, callback);
+
+    //             s3.upload(params, callback);
+    //         }
+    //     });
+    // }
 }
 

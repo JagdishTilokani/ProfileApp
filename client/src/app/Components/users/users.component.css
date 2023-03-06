@@ -1,3 +1,38 @@
 :host {
     flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.users {
+    width: 100%;
+    margin: 2em 0;
+}
+
+.users-table {
+    box-shadow: 5px 5px 10px 1px grey;
+    /* border: 1px solid black; */
+    margin: auto;
+    width: 80%;
+}
+
+.table-head {
+    font-weight: bold;
+    font-size: 1.2rem;
+    background-color: rgb(214, 211, 211);
+}
+
+.row {
+    cursor: pointer;
+}
+
+.row:hover {
+    background-color: rgb(214, 211, 211);
+}
+
+.cell {
+    border: 1px solid black;
+    padding: 0.3em 0.5em;
+    /* text-align: center; */
 }

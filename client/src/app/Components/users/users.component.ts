@@ -4,41 +4,52 @@ import { default as _config } from "../../../config.json";
 import { ItemList } from 'aws-sdk/clients/dynamodb';
 
 @Component({
-  selector: 'app-users',
-  templateUrl: './users.component.html',
-  styleUrls: ['./users.component.css']
+    selector: 'app-users',
+    templateUrl: './users.component.html',
+    styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-  users: ItemList | null = null;
+    users: ItemList | null = null;
 
-  constructor(private profileService: ProfileService) { }
+    constructor(private profileService: ProfileService) { }
 
-  ngOnInit() {
-    this.fetchUsers();
-  }
+    ngOnInit() {
+        this.fetchUsers();
+    }
 
-  fetchUsers() {
-    // fetch(`${_config.api.invokeUrl}/users`)
-    // .then(res => {
-    //   return res.json()
-    // })
-    // .then(users => {
-    //   this.users = users;
-    // })
-    // .catch(console.error);
+    async fetchUsers() {
+        try {
+            const res = await this.profileService.getAllUserProfiles();
+            this.users = res.Items!;
+        }
 
-    this.profileService.getAllUserProfiles((err, data) => {
-      if (err) {
-        console.error("Error getting all users", err);
-      }
+        catch (err) {
+            console.log(err);
+        }
+    }
 
-      else {
-        this.users = data.Items!;
-      }
-    })
-  }
+    //   fetchUsers() {
+    //     // fetch(`${_config.api.invokeUrl}/users`)
+    //     // .then(res => {
+    //     //   return res.json()
+    //     // })
+    //     // .then(users => {
+    //     //   this.users = users;
+    //     // })
+    //     // .catch(console.error);
 
-  viewProfile(id: string) {
-    
-  }
+    //     this.profileService.getAllUserProfiles((err, data) => {
+    //       if (err) {
+    //         console.error("Error getting all users", err);
+    //       }
+
+    //       else {
+    //         this.users = data.Items!;
+    //       }
+    //     })
+    //   }
+
+    viewProfile(id: string) {
+
+    }
 }

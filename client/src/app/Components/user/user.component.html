@@ -1,1 +1,3 @@
-<p>user works!</p>
+{{ profile | json }}
+<img *ngIf="pictureUrl" [src]="pictureUrl" alt="ProfilePic">
+<!-- <a *ngIf="pictureUrl" [href]="pictureUrl" [download]="pictureName">Your profile</a> -->

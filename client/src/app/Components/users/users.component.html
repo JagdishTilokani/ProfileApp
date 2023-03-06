@@ -1,15 +1,15 @@
 <div class="users">
-    <table border="1" >
-        <thead>
-            <tr>
-                <td>Name</td>
-                <td>Email</td>
+    <table class="users-table" cellspacing="0">
+        <thead class="table-head">
+            <tr class="row">
+                <td class="cell">Name</td>
+                <td class="cell">Email</td>
             </tr>
         </thead>
-        <tbody *ngIf="users">
-            <tr *ngFor="let user of users" (click)="viewProfile(user['id'].S!)" routerLink="{{ '/users/' + user['id'].S! }}">
-                <td>{{ user['name'].S}}</td>
-                <td>{{ user['email'].S }}</td>
+        <tbody *ngIf="users" class="table-body">
+            <tr class="row" *ngFor="let user of users" (click)="viewProfile(user['id'].S!)" routerLink="{{ '/users/' + user['id'].S! }}">
+                <td class="cell">{{ user['name'].S}}</td>
+                <td class="cell">{{ user['email'].S }}</td>
             </tr>
         </tbody>
     </table>

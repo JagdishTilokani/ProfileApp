@@ -1,3 +1,64 @@
-{{ profile | json }}
-<img *ngIf="pictureUrl" [src]="pictureUrl" alt="ProfilePic">
+<!-- {{ profile | json }} -->
+<!-- <img *ngIf="pictureUrl" [src]="pictureUrl" alt="ProfilePic"> -->
 <!-- <a *ngIf="pictureUrl" [href]="pictureUrl" [download]="pictureName">Your profile</a> -->
+
+<div class="form-container" *ngIf="profile">
+    <div class="heading">Update Profile</div>
+    <form class="edit-form" [formGroup]="editForm" (ngSubmit)="onSubmit()">
+
+        <p>Fields marked with <span class="required">*</span> are required.</p>
+
+        <div class="profile-pic no-picture" *ngIf="!pictureUrl">
+            <input type="file" 
+                id="profile-pic" 
+                accept="image/jpeg,image/jpg,image/png" 
+                hidden 
+                formControlName="image"
+                #selectedImage
+                (change)="onImageSelect(selectedImage)"
+            />
+            <label for="profile-pic" class="profile-upload">
+                <span class="upload-text">Upload your profile picture</span>
+                <i class="fas fa-cloud-upload-alt upload-logo"></i>
+            </label>
+        </div>
+
+        <img *ngIf="pictureUrl" [src]="pictureUrl" alt="Profile picture" class="profile-pic  pic-loaded">
+            
+        <div class="input-container">
+            <span>Name: <span class="required">*</span></span>
+            <input type="text" placeholder="Name" class="form-input" formControlName="name">
+        </div>
+
+        <div class="input-container">
+            <span>Email: <span class="required">*</span></span>
+            <input type="email" class="form-input" ng-disabled formControlName="email">
+        </div>
+
+        <div class="input-container">
+            <span>Height (in centimeter):</span>
+            <input type="number" placeholder="Height (in cm)" class="form-input" formControlName="height">
+        </div>
+
+        <div class="input-container">
+            <span>Date of birth:</span>
+            <input type="date" class="form-input" formControlName="birthdate">
+        </div>
+
+        <div class="input-container">
+            <span>Gender: </span>
+            <div class="gender-options form-input">
+                <label>
+                    <input type="radio" id="gender" value="Female" formControlName="gender">
+                    <span>Female</span>
+                </label>
+                <label>
+                    <input type="radio" id="gender" value="Male" formControlName="gender">
+                    <span>Male</span>
+                </label>
+            </div>
+        </div>
+
+        <button type="submit" [disabled]="editForm.invalid || editForm.pristine" class="btn">Update</button>
+    </form>
+</div>

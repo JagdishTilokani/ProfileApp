@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Amplify, Auth } from 'aws-amplify';
 import { default as _config } from "../../config.json";
-import { ICredentials } from "aws-amplify/lib-esm/Common/types/types";
 import { Subject } from 'rxjs';
 
 interface ILoginInfo {
@@ -44,20 +43,9 @@ export class AuthService {
         return Auth.essentialCredentials(credentials);
     }
 
-    // getCredentials(callback: (err: any, credentials: ICredentials | null) => void) {
-    //     Auth.currentCredentials()
-    //         .then(credentials => {
-    //             callback(null, Auth.essentialCredentials(credentials));
-    //         })
-    //         .catch(err => {
-    //             callback(err, null);
-    //         });
-    // }
-
     async setLoginStatus() {
         try {
             const user = await Auth.currentAuthenticatedUser();
-            console.log(user);
             
             const isAdmin = user.signInUserSession.accessToken.payload['cognito:groups']?.includes('Admins');
             this.loginStatusEmitter.next({
@@ -73,25 +61,6 @@ export class AuthService {
             });
         }
     }
-
-    // setLoginStatus() {
-    //     Auth.currentAuthenticatedUser()
-    //         .then((res) => {
-    //             const isAdmin = res.signInUserSession.accessToken.payload['cognito:groups']?.includes('Admins');
-
-    //             this.loginStatusEmitter.next({
-    //                 isLoggedIn: true,
-    //                 isAdmin: isAdmin,
-    //                 id: res.attributes.sub
-    //             });
-    //         })
-    //         .catch(err => {
-    //             this.loginStatusEmitter.next({
-    //                 isLoggedIn: false,
-    //                 isAdmin: false
-    //             });
-    //         })
-    // }
 
     async login(email: string, password: string) {
         return Auth.signIn(email, password);

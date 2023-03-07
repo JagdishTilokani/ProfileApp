@@ -84,22 +84,6 @@ export class RegisterComponent {
         }
     }
 
-    // onRegister() {
-    //     this.auth.register(this.email!.value!, this.password!.value!)
-    //         .then(res => {
-    //             this.formSubmitted = true;
-    //         })
-    //         .catch(err => {
-    //             if (err instanceof Error) {
-    //                 this.toastr.error(err.message);
-    //             }
-
-    //             else {
-    //                 this.toastr.error("Please try again", "Something went wrong");
-    //             }
-    //         });
-    // }
-
     // Email confirmation
     confirmationForm = new FormGroup({
         code: new FormControl('', Validators.required),
@@ -134,36 +118,4 @@ export class RegisterComponent {
             console.error(err);
         }
     }
-
-    // verifyCode() {
-    //     const metadata = {
-    //         name: this.name!.value,
-    //         birthdate: this.birthdate!.value || null,
-    //         height: String(this.height!.value) || null,
-    //         gender: this.gender!.value || null
-    //     }
-
-    //     this.auth.verifyCode(this.email!.value!, this.code!.value!, metadata)
-    //         .then(res => {
-    //             this.toastr.success("Email verified successfully.");
-    //             this.router.navigate(["/"]);
-    //             this.auth.login(this.email!.value!, this.password!.value!);
-    //             return this.profileService.addProfileImage()
-    //         })
-    //         .then()
-    //         .catch(err => {
-    //             if (err instanceof Error) {
-    //                 this.toastr.error(err.message);
-    //             }
-
-    //             else {
-    //                 this.toastr.error("Please try again", "Something went wrong");
-    //             }
-
-    //             this.confirmationForm.setErrors({
-    //                 'Confirmation Error': true
-    //             })
-    //             console.error(err);
-    //         });
-    // }
 }

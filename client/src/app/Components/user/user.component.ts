@@ -1,8 +1,7 @@
+import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-// import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-// import { Control } from 'aws-sdk/clients/auditmanager';
 import { ProfileService } from 'src/app/Services/profile.service';
 
 export interface IProfile {
@@ -23,9 +22,9 @@ export class UserComponent implements OnInit {
     userId: string | null = null;
     pictureUrl: string | null = null;
     formSubmitted = false;
-    selectedImage: File | null = null;
+    selectedImage: any = null;
 
-    constructor(private route: ActivatedRoute, private profileService: ProfileService) {
+    constructor(private route: ActivatedRoute, private profileService: ProfileService, private toastr: ToastrService) {
     }
 
     editForm = new FormGroup({
@@ -41,10 +40,6 @@ export class UserComponent implements OnInit {
         return this.editForm.get('name')
     }
 
-    // get email() {
-    //     return this.editForm.get('email');
-    // }
-
     get birthdate() {
         return this.editForm.get('birthdate');
     }
@@ -59,6 +54,10 @@ export class UserComponent implements OnInit {
 
     onImageSelect(inputImage: any) {
         this.selectedImage = inputImage.files[0];
+        this.readImage();
+    }
+
+    readImage() {
         const reader = new FileReader();
 
         reader.addEventListener('load', (event: any) => {
@@ -85,7 +84,10 @@ export class UserComponent implements OnInit {
 
             if (this.userId) {
                 const res = await this.profileService.getProfileImage(this.userId);
-                console.log(res);
+                if (res.Body instanceof Uint8Array) {
+                    this.selectedImage = new Blob([res.Body]);
+                    this.readImage();
+                }
             }
         }
         catch (err) {
@@ -103,8 +105,12 @@ export class UserComponent implements OnInit {
                 height: this.height!.value
             }
 
-            const res = await this.profileService.updateProfile(updatedUser);
-            console.log(res);
+            await this.profileService.updateProfile(updatedUser);
+            if (this.selectedImage) {
+                this.profileService.addProfileImage(this.userId!, this.selectedImage);
+            }
+            this.toastr.success("Profile Updated Successfully");
+            this.editForm.markAsPristine();
         }
 
         catch (err) {

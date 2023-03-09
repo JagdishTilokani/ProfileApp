@@ -1,4 +1,7 @@
 <div class="home">
     <h1 class="heading">Welcome to Profile App</h1>
-    <img src="../../../assets/homeImage.jpg" alt="Home Image" class="img">
+    <div class="img-container">
+        <img src="../../../assets/homeImage.jpg" alt="Home Image" class="img">
+        <span class="user-email" *ngIf="email">Welcome {{ email }}</span>
+    </div>
 </div>

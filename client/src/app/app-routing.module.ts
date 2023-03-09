@@ -1,3 +1,4 @@
+import { AuthGuard } from './Components/Auth/auth.guard';
 import { HomeComponent } from './Components/home/home.component';
 import { ConfirmSignupComponent } from './Components/Auth/confirm-signup/confirm-signup.component';
 import { LoginComponent } from './Components/Auth/login/login.component';
@@ -12,7 +13,7 @@ const routes: Routes = [
   { path: "register", component: RegisterComponent },
   { path: "confirm-signup", component: ConfirmSignupComponent },
   { path: 'users/:id', component: UserComponent },
-  { path: 'users', component: UsersComponent },
+  { path: 'users', component: UsersComponent, canActivate: [AuthGuard] },
   { path: '', component: HomeComponent },
 ];
 

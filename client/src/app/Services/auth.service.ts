@@ -7,6 +7,7 @@ interface ILoginInfo {
     isLoggedIn: boolean,
     isAdmin?: boolean,
     id?: string,
+    email?: string
 }
 
 export interface IUserData {
@@ -43,15 +44,27 @@ export class AuthService {
         return Auth.essentialCredentials(credentials);
     }
 
+    async getIdToken() {
+        const session = await Auth.currentSession();
+        const token = session.getIdToken().getJwtToken();
+        return token;
+    }
+
+    async isAdmin() {
+        const user = await Auth.currentAuthenticatedUser();
+        return user.signInUserSession.accessToken.payload['cognito:groups']?.includes('Admins');
+    }
+
     async setLoginStatus() {
         try {
             const user = await Auth.currentAuthenticatedUser();
-            
+
             const isAdmin = user.signInUserSession.accessToken.payload['cognito:groups']?.includes('Admins');
             this.loginStatusEmitter.next({
                 isLoggedIn: true,
                 isAdmin: isAdmin,
-                id: user.attributes.sub
+                id: user.attributes.sub,
+                email: user.attributes.email
             });
         }
         catch (err) {

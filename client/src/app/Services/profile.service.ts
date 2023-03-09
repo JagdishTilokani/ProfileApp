@@ -1,14 +1,7 @@
-// import { Auth } from 'aws-amplify';
 import { AuthService, IUserData } from 'src/app/Services/auth.service';
 import { Injectable } from '@angular/core';
-// import DynamoDB from 'aws-sdk/clients/dynamodb';
-
-import AWS, { DynamoDB } from 'aws-sdk';
-import { S3 } from 'aws-sdk';
-// import { PutObjectOutput } from 'aws-sdk/clients/s3';
+import { DynamoDB, S3 } from 'aws-sdk';
 import { default as _config } from "../../config.json";
-import { Auth } from 'aws-amplify';
-// import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity"
 
 
 interface IProfile extends IUserData {
@@ -66,12 +59,9 @@ export class ProfileService {
         const params = {
             Bucket: _config.s3.imagesBucket,
             Key: userId + ".jpeg",
-            Expires: 60,
         };
 
-        // return s3.getObject(params).promise();
-        return s3.getSignedUrlPromise('getObject', params)
-        // return s3.upload(params).promise();
+        return s3.getObject(params).promise();
     }
 
     async addProfileImage(userId: string, imageFile: File) {
@@ -89,11 +79,10 @@ export class ProfileService {
         };
 
         return s3.putObject(params).promise();
-        // return s3.upload(params).promise();
     }
 
     async updateProfile(user: any) {
-        const idToken = (await Auth.currentSession()).getIdToken().getJwtToken();
+        const idToken = await this.auth.getIdToken();
         const url = `${_config.api.invokeUrl}/users/${user.id}`;
         return fetch(url, {
             method: "PUT",

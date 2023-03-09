@@ -4,11 +4,23 @@
 }
 
 .heading {
-    font-size: 2rem;
+    font-size: 2.5rem;
     text-align: center;
-    margin: 2em;
+    margin: 1.2em;
+}
+
+.img-container {
+    position: relative;
 }
 
 .img {
     width: 100%;
+}
+
+.user-email {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.8rem;
 }
